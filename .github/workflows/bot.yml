@@ -19,3 +19,12 @@ jobs:
       env:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       run: python bot.py
+    - name: Commit changes
+      run: |
+        if [ -f last_post.txt ]; then
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add last_post.txt
+          git commit -m "Update last post" || echo "No changes to commit"
+          git push || echo "No changes to push"
+        fi
