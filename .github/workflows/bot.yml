@@ -2,7 +2,7 @@ name: Check Instagram
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/2 * * * *"
   workflow_dispatch:
 
 jobs:
