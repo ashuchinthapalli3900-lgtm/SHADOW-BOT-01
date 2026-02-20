@@ -67,29 +67,29 @@ class MyBot(discord.Client):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
 
-@tasks.loop(minutes=20)
-async def check_instagram_task():
-    latest_shortcode = check_instagram()
-    if latest_shortcode:
-        last_shortcode = get_last_shortcode()
-        if latest_shortcode != last_shortcode:
-            link = f"https://www.instagram.com/p/{latest_shortcode}/"
-            config = get_config()
-            channel_id = config.get('notify_channel')
-            if channel_id:
-                channel = bot.get_channel(int(channel_id))
-                if channel:
-                    await channel.send(f"New post from {USERNAME}: {link}")
-                    save_last_shortcode(latest_shortcode)
-                    print(f"Sent notification to channel {channel_id}")
+    @tasks.loop(minutes=20)
+    async def check_instagram_task(self):
+        latest_shortcode = check_instagram()
+        if latest_shortcode:
+            last_shortcode = get_last_shortcode()
+            if latest_shortcode != last_shortcode:
+                link = f"https://www.instagram.com/p/{latest_shortcode}/"
+                config = get_config()
+                channel_id = config.get('notify_channel')
+                if channel_id:
+                    channel = self.get_channel(int(channel_id))
+                    if channel:
+                        await channel.send(f"New post from {USERNAME}: {link}")
+                        save_last_shortcode(latest_shortcode)
+                        print(f"Sent notification to channel {channel_id}")
+                    else:
+                        print(f"Channel {channel_id} not found")
                 else:
-                    print(f"Channel {channel_id} not found")
+                    print("No notify channel set")
             else:
-                print("No notify channel set")
+                print("No new post")
         else:
-            print("No new post")
-    else:
-        print("No posts found")
+            print("No posts found")
 
 bot = MyBot(intents=discord.Intents.default())
 
