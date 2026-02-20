@@ -1,1 +1,4 @@
 .env
+config.json
+last_post.txt
+__pycache__/
